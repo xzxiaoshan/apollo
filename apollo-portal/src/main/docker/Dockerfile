@@ -8,7 +8,7 @@ MAINTAINER ameizi <sxyx2008@163.com>
 
 ENV VERSION 1.5.0-SNAPSHOT
 ENV SERVER_PORT 8070
-# DataSource Info
+# DataSource Info 
 ENV DS_URL ""
 ENV DS_USERNAME ""
 ENV DS_PASSWORD ""
