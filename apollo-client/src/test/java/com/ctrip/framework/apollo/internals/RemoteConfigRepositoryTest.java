@@ -22,6 +22,7 @@ import com.ctrip.framework.apollo.core.dto.ServiceDTO;
 import com.ctrip.framework.apollo.core.signature.Signature;
 import com.ctrip.framework.apollo.enums.ConfigSourceType;
 import com.ctrip.framework.apollo.exceptions.ApolloConfigException;
+import com.ctrip.framework.apollo.exceptions.ApolloConfigStatusCodeException;
 import com.ctrip.framework.apollo.util.ConfigUtil;
 import com.ctrip.framework.apollo.util.OrderedProperties;
 import com.ctrip.framework.apollo.util.factory.PropertiesFactory;
@@ -40,6 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,7 +81,6 @@ public class RemoteConfigRepositoryTest {
 
     when(pollResponse.getStatusCode()).thenReturn(HttpServletResponse.SC_NOT_MODIFIED);
 
-    MockInjector.reset();
     configUtil = new MockConfigUtil();
     MockInjector.setInstance(ConfigUtil.class, configUtil);
 
@@ -108,6 +109,11 @@ public class RemoteConfigRepositoryTest {
 
     someAppId = "someAppId";
     someCluster = "someCluster";
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    MockInjector.reset();
   }
 
   @Test
@@ -199,6 +205,19 @@ public class RemoteConfigRepositoryTest {
   public void testGetRemoteConfigWithServerError() throws Exception {
 
     when(someResponse.getStatusCode()).thenReturn(500);
+
+    RemoteConfigRepository remoteConfigRepository = new RemoteConfigRepository(someNamespace);
+
+    //must stop the long polling before exception occurred
+    remoteConfigLongPollService.stopLongPollingRefresh();
+
+    remoteConfigRepository.getConfig();
+  }
+
+  @Test(expected = ApolloConfigException.class)
+  public void testGetRemoteConfigWithNotFount() throws Exception {
+
+    when(someResponse.getStatusCode()).thenReturn(404);
 
     RemoteConfigRepository remoteConfigRepository = new RemoteConfigRepository(someNamespace);
 
@@ -394,7 +413,8 @@ public class RemoteConfigRepositoryTest {
       if (someResponse.getStatusCode() == 200 || someResponse.getStatusCode() == 304) {
         return (HttpResponse<T>) someResponse;
       }
-      throw new ApolloConfigException(String.format("Http request failed due to status code: %d",
+      throw new ApolloConfigStatusCodeException(someResponse.getStatusCode(),
+              String.format("Http request failed due to status code: %d",
           someResponse.getStatusCode()));
     }
 
