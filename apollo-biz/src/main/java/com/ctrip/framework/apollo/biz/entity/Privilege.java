@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Privilege")
+@Table(name = "PRIVILEGE")
 @SQLDelete(sql = "Update Privilege set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class Privilege extends BaseEntity {

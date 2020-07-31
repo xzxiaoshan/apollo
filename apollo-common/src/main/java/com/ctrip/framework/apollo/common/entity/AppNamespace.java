@@ -14,7 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "AppNamespace")
+@Table(name = "APPNAMESPACE")
 @SQLDelete(sql = "Update AppNamespace set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class AppNamespace extends BaseEntity {
@@ -37,7 +37,7 @@ public class AppNamespace extends BaseEntity {
   @Column(name = "IsPublic", columnDefinition = "Bit default '0'")
   private boolean isPublic = false;
 
-  @Column(name = "Comment")
+  @Column(name = "Commt")
   private String comment;
 
   public String getAppId() {

@@ -16,6 +16,7 @@ eureka:
       enabled: true
     eurekaServiceUrlPollIntervalSeconds: 60
 
+
 management:
   health:
     status:

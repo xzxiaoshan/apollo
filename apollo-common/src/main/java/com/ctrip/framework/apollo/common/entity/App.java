@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "App")
+@Table(name = "APP")
 @SQLDelete(sql = "Update App set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class App extends BaseEntity {

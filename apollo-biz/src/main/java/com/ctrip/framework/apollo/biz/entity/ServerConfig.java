@@ -13,20 +13,20 @@ import javax.persistence.Table;
  * @author Jason Song(song_s@ctrip.com)
  */
 @Entity
-@Table(name = "ServerConfig")
-@SQLDelete(sql = "Update ServerConfig set isDeleted = 1 where id = ?")
-@Where(clause = "isDeleted = 0")
+@Table(name = "SERVERCONFIG")
+@SQLDelete(sql = "Update ServerConfig set ISDELETED = 1 where ID = ?")
+@Where(clause = "ISDELETED = 0")
 public class ServerConfig extends BaseEntity {
-  @Column(name = "Key", nullable = false)
+  @Column(name = "KEY_COL", nullable = false)
   private String key;
 
-  @Column(name = "Cluster", nullable = false)
+  @Column(name = "CLUSTER_COL", nullable = false)
   private String cluster;
 
-  @Column(name = "Value", nullable = false)
+  @Column(name = "VALUE_COL", nullable = false)
   private String value;
 
-  @Column(name = "Comment", nullable = false)
+  @Column(name = "COMMT", nullable = false)
   private String comment;
 
   public String getKey() {

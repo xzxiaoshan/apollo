@@ -132,7 +132,7 @@ public class ConfigController {
     apolloConfig.setConfigurations(mergeReleaseConfigurations(releases));
 
     Tracer.logEvent("Apollo.Config.Found", assembleKey(appId, appClusterNameLoaded,
-        originalNamespace, dataCenter));
+            originalNamespace, dataCenter));
     return apolloConfig;
   }
 

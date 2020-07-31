@@ -19,14 +19,14 @@ public class Item extends BaseEntity {
   @Column(name = "NAMESPACEID", nullable = false)
   private long namespaceId;
 
-  @Column(name = "key", nullable = false)
+  @Column(name = "KEY_COL", nullable = false)
   private String key;
 
   @Column(name = "VALUE_COL")
   @Lob
   private String value;
 
-  @Column(name = "comment")
+  @Column(name = "COMMT")
   private String comment;
 
   @Column(name = "LINENUM")

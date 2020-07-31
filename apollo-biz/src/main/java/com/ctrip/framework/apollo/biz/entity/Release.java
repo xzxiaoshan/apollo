@@ -14,10 +14,11 @@ import javax.persistence.Table;
  * @author Jason Song(song_s@ctrip.com)
  */
 @Entity
-@Table(name = "Release")
+@Table(name = "RELEASE_TABLE")
 @SQLDelete(sql = "Update Release set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class Release extends BaseEntity {
+
   @Column(name = "ReleaseKey", nullable = false)
   private String releaseKey;
 
@@ -37,7 +38,7 @@ public class Release extends BaseEntity {
   @Lob
   private String configurations;
 
-  @Column(name = "Comment", nullable = false)
+  @Column(name = "Commt", nullable = false)
   private String comment;
 
   @Column(name = "IsAbandoned", columnDefinition = "Bit default '0'")

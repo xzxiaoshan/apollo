@@ -20,7 +20,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for accesskey
 -- ----------------------------
-DROP TABLE IF EXISTS `accesskey`;
 CREATE TABLE `accesskey`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -39,7 +38,6 @@ CREATE TABLE `accesskey`  (
 -- ----------------------------
 -- Table structure for app
 -- ----------------------------
-DROP TABLE IF EXISTS `app`;
 CREATE TABLE `app`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -67,7 +65,6 @@ INSERT INTO `app` VALUES (1, 'SampleApp', 'Sample App', 'TEST1', '样例部门1'
 -- ----------------------------
 -- Table structure for appnamespace
 -- ----------------------------
-DROP TABLE IF EXISTS `appnamespace`;
 CREATE TABLE `appnamespace`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
@@ -94,7 +91,6 @@ INSERT INTO `appnamespace` VALUES (1, 'application', 'SampleApp', 'properties', 
 -- ----------------------------
 -- Table structure for audit_table
 -- ----------------------------
-DROP TABLE IF EXISTS `audit_table`;
 CREATE TABLE `audit_table`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `entityname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '表名',
@@ -139,7 +135,6 @@ INSERT INTO `audit_table` VALUES (208904849956278273, 'ReleaseHistory', 20890484
 -- ----------------------------
 -- Table structure for cluster_table
 -- ----------------------------
-DROP TABLE IF EXISTS `cluster_table`;
 CREATE TABLE `cluster_table`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '集群名字',
@@ -164,7 +159,6 @@ INSERT INTO `cluster_table` VALUES (1, 'default', 'SampleApp', 0, 0, '', '2020-0
 -- ----------------------------
 -- Table structure for commit
 -- ----------------------------
-DROP TABLE IF EXISTS `commit`;
 CREATE TABLE `commit`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `changesets` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '修改变更集',
@@ -192,7 +186,6 @@ INSERT INTO `commit` VALUES (208648685964234752, '{\"createItems\":[],\"updateIt
 -- ----------------------------
 -- Table structure for grayreleaserule
 -- ----------------------------
-DROP TABLE IF EXISTS `grayreleaserule`;
 CREATE TABLE `grayreleaserule`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `appid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -215,7 +208,6 @@ CREATE TABLE `grayreleaserule`  (
 -- ----------------------------
 -- Table structure for instance
 -- ----------------------------
-DROP TABLE IF EXISTS `instance`;
 CREATE TABLE `instance`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `appid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -233,7 +225,6 @@ CREATE TABLE `instance`  (
 -- ----------------------------
 -- Table structure for instanceconfig
 -- ----------------------------
-DROP TABLE IF EXISTS `instanceconfig`;
 CREATE TABLE `instanceconfig`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `instanceid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Instance Id',
@@ -254,7 +245,6 @@ CREATE TABLE `instanceconfig`  (
 -- ----------------------------
 -- Table structure for item
 -- ----------------------------
-DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `namespaceid` decimal(20, 0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '集群NamespaceId',
@@ -280,7 +270,6 @@ INSERT INTO `item` VALUES (1, 1, 'timeout', '20000', 'sample timeout配置', 1, 
 -- ----------------------------
 -- Table structure for namespace
 -- ----------------------------
-DROP TABLE IF EXISTS `namespace`;
 CREATE TABLE `namespace`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -305,7 +294,6 @@ INSERT INTO `namespace` VALUES (1, 'SampleApp', 'default', 'application', 0, 'de
 -- ----------------------------
 -- Table structure for namespacelock
 -- ----------------------------
-DROP TABLE IF EXISTS `namespacelock`;
 CREATE TABLE `namespacelock`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增id',
   `namespaceid` decimal(20, 0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '集群NamespaceId',
@@ -322,7 +310,6 @@ CREATE TABLE `namespacelock`  (
 -- ----------------------------
 -- Table structure for release_table
 -- ----------------------------
-DROP TABLE IF EXISTS `release_table`;
 CREATE TABLE `release_table`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `releasekey` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '发布的Key',
@@ -353,7 +340,6 @@ INSERT INTO `release_table` VALUES (208904849813671936, '20200730111317-1dc5c619
 -- ----------------------------
 -- Table structure for releasehistory
 -- ----------------------------
-DROP TABLE IF EXISTS `releasehistory`;
 CREATE TABLE `releasehistory`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `appid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -391,7 +377,6 @@ INSERT INTO `releasehistory` VALUES (208904849956278272, 'SampleApp', 'default',
 -- ----------------------------
 -- Table structure for releasemessage
 -- ----------------------------
-DROP TABLE IF EXISTS `releasemessage`;
 CREATE TABLE `releasemessage`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `message` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '发布的消息内容',
@@ -409,7 +394,6 @@ INSERT INTO `releasemessage` VALUES (208904849981444096, 'SampleApp+default+appl
 -- ----------------------------
 -- Table structure for serverconfig
 -- ----------------------------
-DROP TABLE IF EXISTS `serverconfig`;
 CREATE TABLE `serverconfig`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `key_col` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '配置项Key',
@@ -429,7 +413,7 @@ CREATE TABLE `serverconfig`  (
 -- ----------------------------
 -- Records of serverconfig
 -- ----------------------------
-INSERT INTO `serverconfig` VALUES (1, 'eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔', 0, 'default', '2020-07-21 02:02:46', '', '2020-07-21 02:02:46');
+INSERT INTO `serverconfig` VALUES (1, 'eureka.service.url', 'default', 'http://localhost:6166/eureka/', 'Eureka服务Url，多个service以英文逗号分隔', 0, 'default', '2020-07-21 02:02:46', '', '2020-07-21 02:02:46');
 INSERT INTO `serverconfig` VALUES (2, 'namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关', 0, 'default', '2020-07-21 02:02:46', '', '2020-07-21 02:02:46');
 INSERT INTO `serverconfig` VALUES (3, 'item.value.length.limit', 'default', '20000', 'item value最大长度限制', 0, 'default', '2020-07-21 02:02:46', '', '2020-07-21 02:02:46');
 INSERT INTO `serverconfig` VALUES (4, 'config-service.cache.enabled', 'default', 'false', 'ConfigService是否开启缓存，开启后能提高性能，但是会增大内存消耗！', 0, 'default', '2020-07-21 02:02:46', '', '2020-07-21 02:02:46');
@@ -438,7 +422,6 @@ INSERT INTO `serverconfig` VALUES (5, 'item.key.length.limit', 'default', '128',
 -- ----------------------------
 -- Table structure for sys_id_machine
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_id_machine`;
 CREATE TABLE `sys_id_machine`  (
   `machine_ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
   `machine_id` decimal(11, 0) NOT NULL COMMENT '主机IP对应的机器码',

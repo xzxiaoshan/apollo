@@ -20,7 +20,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for app
 -- ----------------------------
-DROP TABLE IF EXISTS `app`;
 CREATE TABLE `app`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -48,7 +47,6 @@ INSERT INTO `app` VALUES (1, 'SampleApp', 'Sample App', 'TEST1', '样例部门1'
 -- ----------------------------
 -- Table structure for appnamespace
 -- ----------------------------
-DROP TABLE IF EXISTS `appnamespace`;
 CREATE TABLE `appnamespace`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
@@ -75,7 +73,6 @@ INSERT INTO `appnamespace` VALUES (1, 'application', 'SampleApp', 'properties', 
 -- ----------------------------
 -- Table structure for authorities
 -- ----------------------------
-DROP TABLE IF EXISTS `authorities`;
 CREATE TABLE `authorities`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -91,7 +88,6 @@ INSERT INTO `authorities` VALUES (1, 'apollo', 'ROLE_user');
 -- ----------------------------
 -- Table structure for consumer
 -- ----------------------------
-DROP TABLE IF EXISTS `consumer`;
 CREATE TABLE `consumer`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -113,7 +109,6 @@ CREATE TABLE `consumer`  (
 -- ----------------------------
 -- Table structure for consumeraudit
 -- ----------------------------
-DROP TABLE IF EXISTS `consumeraudit`;
 CREATE TABLE `consumeraudit`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Consumer Id',
@@ -129,7 +124,6 @@ CREATE TABLE `consumeraudit`  (
 -- ----------------------------
 -- Table structure for consumerrole
 -- ----------------------------
-DROP TABLE IF EXISTS `consumerrole`;
 CREATE TABLE `consumerrole`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Consumer Id',
@@ -148,7 +142,6 @@ CREATE TABLE `consumerrole`  (
 -- ----------------------------
 -- Table structure for consumertoken
 -- ----------------------------
-DROP TABLE IF EXISTS `consumertoken`;
 CREATE TABLE `consumertoken`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'ConsumerId',
@@ -167,7 +160,6 @@ CREATE TABLE `consumertoken`  (
 -- ----------------------------
 -- Table structure for favorite
 -- ----------------------------
-DROP TABLE IF EXISTS `favorite`;
 CREATE TABLE `favorite`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
   `userid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '收藏的用户',
@@ -187,7 +179,6 @@ CREATE TABLE `favorite`  (
 -- ----------------------------
 -- Table structure for permission
 -- ----------------------------
-DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `permissiontype` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '权限类型',
@@ -215,7 +206,6 @@ INSERT INTO `permission` VALUES (6, 'CreateApplication', 'SystemRole', 0, 'apoll
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------
-DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `rolename` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'Role name',
@@ -240,7 +230,6 @@ INSERT INTO `role` VALUES (4, 'CreateApplication+SystemRole', 0, 'apollo', '2020
 -- ----------------------------
 -- Table structure for rolepermission
 -- ----------------------------
-DROP TABLE IF EXISTS `rolepermission`;
 CREATE TABLE `rolepermission`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `roleid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Role Id',
@@ -269,7 +258,6 @@ INSERT INTO `rolepermission` VALUES (6, 4, 6, 0, 'apollo', '2020-07-21 15:27:47'
 -- ----------------------------
 -- Table structure for serverconfig
 -- ----------------------------
-DROP TABLE IF EXISTS `serverconfig`;
 CREATE TABLE `serverconfig`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `key_col` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '配置项Key',
@@ -289,7 +277,7 @@ CREATE TABLE `serverconfig`  (
 -- Records of serverconfig
 -- ----------------------------
 INSERT INTO `serverconfig` VALUES (1, 'apollo.portal.envs', 'dev', '可支持的环境列表', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
-INSERT INTO `serverconfig` VALUES (2, 'organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (2, 'organizations', '[{\"orgId\":\"dept01\",\"orgName\":\"部门1\"},{\"orgId\":\"dept02\",\"orgName\":\"部门2\"}]', '部门列表', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
 INSERT INTO `serverconfig` VALUES (3, 'superAdmin', 'apollo', 'Portal超级管理员', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
 INSERT INTO `serverconfig` VALUES (4, 'api.readTimeout', '10000', 'http接口read timeout', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
 INSERT INTO `serverconfig` VALUES (5, 'consumer.token.salt', 'someSalt', 'consumer token salt', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
@@ -299,7 +287,6 @@ INSERT INTO `serverconfig` VALUES (7, 'configView.memberOnly.envs', 'dev', '只�
 -- ----------------------------
 -- Table structure for sys_id_machine
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_id_machine`;
 CREATE TABLE `sys_id_machine`  (
   `machine_ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
   `machine_id` decimal(11, 0) NOT NULL COMMENT '主机IP对应的机器码',
@@ -316,7 +303,6 @@ INSERT INTO `sys_id_machine` VALUES ('192.168.52.1', 1, '2020-07-29 17:45:26', '
 -- ----------------------------
 -- Table structure for userrole
 -- ----------------------------
-DROP TABLE IF EXISTS `userrole`;
 CREATE TABLE `userrole`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `userid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户身份标识',
@@ -342,7 +328,6 @@ INSERT INTO `userrole` VALUES (3, 'apollo', 3, 0, '', '2020-07-21 02:02:56', '',
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '用户名',
