@@ -1,330 +1,360 @@
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-# Create Database
-# ------------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS ApolloPortalDB DEFAULT CHARACTER SET = utf8mb4;
-
-Use ApolloPortalDB;
-
-# Dump of table app
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `App`;
-
-CREATE TABLE `App` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `AppId` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
-  `OrgId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '部门Id',
-  `OrgName` varchar(64) NOT NULL DEFAULT 'default' COMMENT '部门名字',
-  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerName',
-  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `AppId` (`AppId`(191)),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_Name` (`Name`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用表';
-
-
-
-# Dump of table appnamespace
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `AppNamespace`;
-
-CREATE TABLE `AppNamespace` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `Name` varchar(32) NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
-  `AppId` varchar(32) NOT NULL DEFAULT '' COMMENT 'app id',
-  `Format` varchar(32) NOT NULL DEFAULT 'properties' COMMENT 'namespace的format类型',
-  `IsPublic` bit(1) NOT NULL DEFAULT b'0' COMMENT 'namespace是否为公共',
-  `Comment` varchar(64) NOT NULL DEFAULT '' COMMENT '注释',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_AppId` (`AppId`),
-  KEY `Name_AppId` (`Name`,`AppId`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用namespace定义';
-
-
-
-# Dump of table consumer
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Consumer`;
-
-CREATE TABLE `Consumer` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `AppId` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
-  `OrgId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '部门Id',
-  `OrgName` varchar(64) NOT NULL DEFAULT 'default' COMMENT '部门名字',
-  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerName',
-  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `AppId` (`AppId`(191)),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='开放API消费者';
-
-
-
-# Dump of table consumeraudit
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ConsumerAudit`;
-
-CREATE TABLE `ConsumerAudit` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
-  `Uri` varchar(1024) NOT NULL DEFAULT '' COMMENT '访问的Uri',
-  `Method` varchar(16) NOT NULL DEFAULT '' COMMENT '访问的Method',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_ConsumerId` (`ConsumerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer审计表';
-
-
-
-# Dump of table consumerrole
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ConsumerRole`;
-
-CREATE TABLE `ConsumerRole` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_RoleId` (`RoleId`),
-  KEY `IX_ConsumerId_RoleId` (`ConsumerId`,`RoleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer和role的绑定表';
-
-
-
-# Dump of table consumertoken
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ConsumerToken`;
-
-CREATE TABLE `ConsumerToken` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'ConsumerId',
-  `Token` varchar(128) NOT NULL DEFAULT '' COMMENT 'token',
-  `Expires` datetime NOT NULL DEFAULT '2099-01-01 00:00:00' COMMENT 'token失效时间',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  UNIQUE KEY `IX_Token` (`Token`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer token表';
-
-# Dump of table favorite
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Favorite`;
-
-CREATE TABLE `Favorite` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `UserId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '收藏的用户',
-  `AppId` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Position` int(32) NOT NULL DEFAULT '10000' COMMENT '收藏顺序',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `AppId` (`AppId`(191)),
-  KEY `IX_UserId` (`UserId`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='应用收藏表';
-
-# Dump of table permission
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Permission`;
-
-CREATE TABLE `Permission` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `PermissionType` varchar(32) NOT NULL DEFAULT '' COMMENT '权限类型',
-  `TargetId` varchar(256) NOT NULL DEFAULT '' COMMENT '权限对象类型',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_TargetId_PermissionType` (`TargetId`(191),`PermissionType`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='permission表';
-
-
-
-# Dump of table role
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Role`;
-
-CREATE TABLE `Role` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `RoleName` varchar(256) NOT NULL DEFAULT '' COMMENT 'Role name',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_RoleName` (`RoleName`(191)),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
-
-
-
-# Dump of table rolepermission
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `RolePermission`;
-
-CREATE TABLE `RolePermission` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `PermissionId` int(10) unsigned DEFAULT NULL COMMENT 'Permission Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_RoleId` (`RoleId`),
-  KEY `IX_PermissionId` (`PermissionId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色和权限的绑定表';
-
-
-
-# Dump of table serverconfig
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ServerConfig`;
-
-CREATE TABLE `ServerConfig` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `Key` varchar(64) NOT NULL DEFAULT 'default' COMMENT '配置项Key',
-  `Value` varchar(2048) NOT NULL DEFAULT 'default' COMMENT '配置项值',
-  `Comment` varchar(1024) DEFAULT '' COMMENT '注释',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_Key` (`Key`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置服务自身配置';
-
-
-
-# Dump of table userrole
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `UserRole`;
-
-CREATE TABLE `UserRole` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `UserId` varchar(128) DEFAULT '' COMMENT '用户身份标识',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DataChange_CreatedBy` varchar(32) DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-  PRIMARY KEY (`Id`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_RoleId` (`RoleId`),
-  KEY `IX_UserId_RoleId` (`UserId`,`RoleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和role的绑定表';
-
-# Dump of table Users
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Users`;
-
-CREATE TABLE `Users` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `Username` varchar(64) NOT NULL DEFAULT 'default' COMMENT '用户名',
-  `Password` varchar(64) NOT NULL DEFAULT 'default' COMMENT '密码',
-  `Email` varchar(64) NOT NULL DEFAULT 'default' COMMENT '邮箱地址',
-  `Enabled` tinyint(4) DEFAULT NULL COMMENT '是否有效',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
-
-
-# Dump of table Authorities
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Authorities`;
-
-CREATE TABLE `Authorities` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `Username` varchar(64) NOT NULL,
-  `Authority` varchar(50) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-# Config
-# ------------------------------------------------------------
-INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
-VALUES
-    ('apollo.portal.envs', 'dev', '可支持的环境列表'),
-    ('organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表'),
-    ('superAdmin', 'apollo', 'Portal超级管理员'),
-    ('api.readTimeout', '10000', 'http接口read timeout'),
-    ('consumer.token.salt', 'someSalt', 'consumer token salt'),
-    ('admin.createPrivateNamespace.switch', 'true', '是否允许项目管理员创建私有namespace'),
-    ('configView.memberOnly.envs', 'pro', '只对项目成员显示配置信息的环境列表，多个env以英文逗号分隔');
-
-
-INSERT INTO `Users` (`Username`, `Password`, `Email`, `Enabled`)
-VALUES
-	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo@acme.com', 1);
-
-INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
-
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 192.168.131.130
+ Source Server Type    : MySQL
+ Source Server Version : 50731
+ Source Host           : 192.168.131.130:3306
+ Source Schema         : apolloprotaldb
+
+ Target Server Type    : MySQL
+ Target Server Version : 50731
+ File Encoding         : 65001
+
+ Date: 30/07/2020 11:13:34
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for app
+-- ----------------------------
+DROP TABLE IF EXISTS `app`;
+CREATE TABLE `app`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
+  `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '应用名',
+  `orgid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '部门Id',
+  `orgname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '部门名字',
+  `ownername` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'ownerName',
+  `owneremail` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `appid`(`appid`(191)) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE,
+  INDEX `ix_name`(`name`(191)) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of app
+-- ----------------------------
+INSERT INTO `app` VALUES (1, 'SampleApp', 'Sample App', 'TEST1', '样例部门1', 'apollo', 'apollo@acme.com', 0, 'default', '2020-07-21 02:02:56', 'apollo', '2020-07-21 05:38:07');
+
+-- ----------------------------
+-- Table structure for appnamespace
+-- ----------------------------
+DROP TABLE IF EXISTS `appnamespace`;
+CREATE TABLE `appnamespace`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增主键',
+  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
+  `appid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'app id',
+  `format` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'properties' COMMENT 'namespace的format类型',
+  `ispublic` int(1) NOT NULL DEFAULT 0 COMMENT 'namespace是否为公共',
+  `commt` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '注释',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_appid`(`appid`) USING BTREE,
+  INDEX `name_appid`(`name`, `appid`) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用namespace定义' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of appnamespace
+-- ----------------------------
+INSERT INTO `appnamespace` VALUES (1, 'application', 'SampleApp', 'properties', 0, 'default app namespace', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+
+-- ----------------------------
+-- Table structure for authorities
+-- ----------------------------
+DROP TABLE IF EXISTS `authorities`;
+CREATE TABLE `authorities`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `authority` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of authorities
+-- ----------------------------
+INSERT INTO `authorities` VALUES (1, 'apollo', 'ROLE_user');
+
+-- ----------------------------
+-- Table structure for consumer
+-- ----------------------------
+DROP TABLE IF EXISTS `consumer`;
+CREATE TABLE `consumer`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '应用名',
+  `orgid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '部门Id',
+  `orgname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '部门名字',
+  `ownername` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'ownerName',
+  `owneremail` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `appid`(`appid`(191)) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '开放API消费者' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for consumeraudit
+-- ----------------------------
+DROP TABLE IF EXISTS `consumeraudit`;
+CREATE TABLE `consumeraudit`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Consumer Id',
+  `uri` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '访问的Uri',
+  `method` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '访问的Method',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE,
+  INDEX `ix_consumerid`(`consumerid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'consumer审计表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for consumerrole
+-- ----------------------------
+DROP TABLE IF EXISTS `consumerrole`;
+CREATE TABLE `consumerrole`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Consumer Id',
+  `roleid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Role Id',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE,
+  INDEX `ix_roleid`(`roleid`) USING BTREE,
+  INDEX `ix_consumerid_roleid`(`consumerid`, `roleid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'consumer和role的绑定表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for consumertoken
+-- ----------------------------
+DROP TABLE IF EXISTS `consumertoken`;
+CREATE TABLE `consumertoken`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `consumerid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'ConsumerId',
+  `token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'token',
+  `expires` datetime(0) NOT NULL DEFAULT '2099-01-01 00:00:00' COMMENT 'token失效时间',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ix_token`(`token`) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'consumer token表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for favorite
+-- ----------------------------
+DROP TABLE IF EXISTS `favorite`;
+CREATE TABLE `favorite`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '主键',
+  `userid` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '收藏的用户',
+  `appid` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT 'AppID',
+  `position` int(32) NOT NULL DEFAULT 10000 COMMENT '收藏顺序',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `appid`(`appid`(191)) USING BTREE,
+  INDEX `ix_userid`(`userid`) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用收藏表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for permission
+-- ----------------------------
+DROP TABLE IF EXISTS `permission`;
+CREATE TABLE `permission`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `permissiontype` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '权限类型',
+  `targetid` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '权限对象类型',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_targetid_permissiontype`(`targetid`(191), `permissiontype`) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'permission表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of permission
+-- ----------------------------
+INSERT INTO `permission` VALUES (1, 'CreateCluster', 'SampleApp', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `permission` VALUES (2, 'CreateNamespace', 'SampleApp', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `permission` VALUES (3, 'AssignRole', 'SampleApp', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `permission` VALUES (4, 'ModifyNamespace', 'SampleApp+application', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `permission` VALUES (5, 'ReleaseNamespace', 'SampleApp+application', 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `permission` VALUES (6, 'CreateApplication', 'SystemRole', 0, 'apollo', '2020-07-21 15:27:47', 'apollo', '2020-07-21 15:27:47');
+
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `rolename` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT 'Role name',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_rolename`(`rolename`(191)) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (1, 'Master+SampleApp', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `role` VALUES (2, 'ModifyNamespace+SampleApp+application', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `role` VALUES (3, 'ReleaseNamespace+SampleApp+application', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `role` VALUES (4, 'CreateApplication+SystemRole', 0, 'apollo', '2020-07-21 15:27:47', 'apollo', '2020-07-21 15:27:47');
+
+-- ----------------------------
+-- Table structure for rolepermission
+-- ----------------------------
+DROP TABLE IF EXISTS `rolepermission`;
+CREATE TABLE `rolepermission`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `roleid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Role Id',
+  `permissionid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Permission Id',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE,
+  INDEX `ix_roleid`(`roleid`) USING BTREE,
+  INDEX `ix_permissionid`(`permissionid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色和权限的绑定表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of rolepermission
+-- ----------------------------
+INSERT INTO `rolepermission` VALUES (1, 1, 1, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `rolepermission` VALUES (2, 1, 2, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `rolepermission` VALUES (3, 1, 3, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `rolepermission` VALUES (4, 2, 4, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `rolepermission` VALUES (5, 3, 5, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `rolepermission` VALUES (6, 4, 6, 0, 'apollo', '2020-07-21 15:27:47', 'apollo', '2020-07-21 15:27:47');
+
+-- ----------------------------
+-- Table structure for serverconfig
+-- ----------------------------
+DROP TABLE IF EXISTS `serverconfig`;
+CREATE TABLE `serverconfig`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `key_col` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '配置项Key',
+  `value_col` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'default' COMMENT '配置项值',
+  `commt` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '注释',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_key`(`key_col`) USING BTREE,
+  INDEX `datachange_lasttime`(`datachange_lasttime`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '配置服务自身配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of serverconfig
+-- ----------------------------
+INSERT INTO `serverconfig` VALUES (1, 'apollo.portal.envs', 'dev', '可支持的环境列表', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (2, 'organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (3, 'superAdmin', 'apollo', 'Portal超级管理员', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (4, 'api.readTimeout', '10000', 'http接口read timeout', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (5, 'consumer.token.salt', 'someSalt', 'consumer token salt', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (6, 'admin.createPrivateNamespace.switch', 'true', '是否允许项目管理员创建私有namespace', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `serverconfig` VALUES (7, 'configView.memberOnly.envs', 'dev', '只对项目成员显示配置信息的环境列表，多个env以英文逗号分隔', 0, 'default', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+
+-- ----------------------------
+-- Table structure for sys_id_machine
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_id_machine`;
+CREATE TABLE `sys_id_machine`  (
+  `machine_ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
+  `machine_id` decimal(11, 0) NOT NULL COMMENT '主机IP对应的机器码',
+  `add_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `heart_last_time` datetime(0) NOT NULL COMMENT '最后一次心跳时间',
+  UNIQUE INDEX `sys_id_machine_indexs_ip`(`machine_ip`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_id_machine
+-- ----------------------------
+INSERT INTO `sys_id_machine` VALUES ('192.168.52.1', 1, '2020-07-29 17:45:26', '2020-07-30 11:12:16');
+
+-- ----------------------------
+-- Table structure for userrole
+-- ----------------------------
+DROP TABLE IF EXISTS `userrole`;
+CREATE TABLE `userrole`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `userid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户身份标识',
+  `roleid` decimal(20, 0) UNSIGNED NULL DEFAULT NULL COMMENT 'Role Id',
+  `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',
+  `datachange_createdby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建人邮箱前缀',
+  `datachange_createdtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `datachange_lastmodifiedby` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后修改人邮箱前缀',
+  `datachange_lasttime` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ix_datachange_lasttime`(`datachange_lasttime`) USING BTREE,
+  INDEX `ix_roleid`(`roleid`) USING BTREE,
+  INDEX `ix_userid_roleid`(`userid`, `roleid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户和role的绑定表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of userrole
+-- ----------------------------
+INSERT INTO `userrole` VALUES (1, 'apollo', 1, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `userrole` VALUES (2, 'apollo', 2, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+INSERT INTO `userrole` VALUES (3, 'apollo', 3, 0, '', '2020-07-21 02:02:56', '', '2020-07-21 02:02:56');
+
+-- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`  (
+  `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '用户名',
+  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '密码',
+  `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '邮箱地址',
+  `enabled` tinyint(4) NULL DEFAULT NULL COMMENT '是否有效',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (1, 'apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo@acme.com', 1);
+
+SET FOREIGN_KEY_CHECKS = 1;
