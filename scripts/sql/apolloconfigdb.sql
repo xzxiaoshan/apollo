@@ -249,7 +249,7 @@ CREATE TABLE `item`  (
   `id` decimal(20, 0) UNSIGNED NOT NULL COMMENT '自增Id',
   `namespaceid` decimal(20, 0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '集群NamespaceId',
   `key_col` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'default' COMMENT '配置项Key',
-  `value_col` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '配置项值',
+  `value_col` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '配置项值',
   `commt` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '注释',
   `linenum` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '行号',
   `isdeleted` int(1) NOT NULL DEFAULT 0 COMMENT '1: deleted, 0: normal',

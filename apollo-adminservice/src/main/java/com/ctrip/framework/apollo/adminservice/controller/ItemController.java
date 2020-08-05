@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +47,7 @@ public class ItemController {
                         @PathVariable("clusterName") String clusterName,
                         @PathVariable("namespaceName") String namespaceName, @RequestBody ItemDTO dto) {
     Item entity = BeanUtils.transform(Item.class, dto);
-
+    entity.setValue(StringUtils.defaultIfEmpty(dto.getValue()," "));
     ConfigChangeContentBuilder builder = new ConfigChangeContentBuilder();
     Item managedEntity = itemService.findOne(appId, clusterName, namespaceName, entity.getKey());
     if (managedEntity != null) {
@@ -84,14 +86,15 @@ public class ItemController {
       throw new BadRequestException("item not exist");
     }
 
-    Item beforeUpdateItem = BeanUtils.transform(Item.class, managedEntity);
 
+    Item beforeUpdateItem = BeanUtils.transform(Item.class, managedEntity);
     //protect. only value,comment,lastModifiedBy can be modified
     managedEntity.setValue(entity.getValue());
     managedEntity.setComment(entity.getComment());
     managedEntity.setDataChangeLastModifiedBy(entity.getDataChangeLastModifiedBy());
 
     entity = itemService.update(managedEntity);
+
     builder.updateItem(beforeUpdateItem, entity);
     itemDTO = BeanUtils.transform(ItemDTO.class, entity);
 

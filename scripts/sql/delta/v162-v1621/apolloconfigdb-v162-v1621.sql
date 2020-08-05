@@ -6,7 +6,6 @@ Use ApolloConfigDB;
 -- ----------------------------
 -- Table structure for sys_id_machine
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_id_machine`;
 CREATE TABLE `sys_id_machine`  (
   `machine_ip` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主机IP',
   `machine_id` decimal(11, 0) NOT NULL COMMENT '主机IP对应的机器码',
