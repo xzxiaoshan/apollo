@@ -34,12 +34,18 @@ tolerations: []
 affinity: {}
 
 config:
+  # spring profiles to activate
+  profiles: "github,auth"
   # specify the env names, e.g. dev,pro
   envs: ""
   # specify the meta servers, e.g.
   # dev: http://apollo-configservice-dev:8080
   # pro: http://apollo-configservice-pro:8080
   metaServers: {}
+  # specify the context path, e.g. /apollo
+  contextPath: ""
+  # extra config files for apollo-portal, e.g. application-ldap.yml
+  files: {}
 
 portaldb:
   name: apollo-portaldb
