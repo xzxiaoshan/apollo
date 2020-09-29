@@ -11,7 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Commit")
+@Table(name = "COMMIT")
 @SQLDelete(sql = "Update Commit set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class Commit extends BaseEntity {
@@ -29,7 +29,7 @@ public class Commit extends BaseEntity {
   @Column(name = "NamespaceName", nullable = false)
   private String namespaceName;
 
-  @Column(name = "Comment")
+  @Column(name = "Commt")
   private String comment;
 
   public String getChangeSets() {

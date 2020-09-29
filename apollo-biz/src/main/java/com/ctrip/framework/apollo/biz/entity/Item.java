@@ -11,25 +11,25 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Item")
+@Table(name = "ITEM")
 @SQLDelete(sql = "Update Item set isDeleted = 1 where id = ?")
 @Where(clause = "isDeleted = 0")
 public class Item extends BaseEntity {
 
-  @Column(name = "NamespaceId", nullable = false)
+  @Column(name = "NAMESPACEID", nullable = false)
   private long namespaceId;
 
-  @Column(name = "key", nullable = false)
+  @Column(name = "KEY_COL", nullable = false)
   private String key;
 
-  @Column(name = "value")
+  @Column(name = "VALUE_COL")
   @Lob
   private String value;
 
-  @Column(name = "comment")
+  @Column(name = "COMMT")
   private String comment;
 
-  @Column(name = "LineNum")
+  @Column(name = "LINENUM")
   private Integer lineNum;
 
   public String getComment() {

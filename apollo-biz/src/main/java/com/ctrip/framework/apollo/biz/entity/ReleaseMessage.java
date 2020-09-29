@@ -1,25 +1,23 @@
 package com.ctrip.framework.apollo.biz.entity;
 
 import com.google.common.base.MoreObjects;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
 
 /**
  * @author Jason Song(song_s@ctrip.com)
  */
 @Entity
-@Table(name = "ReleaseMessage")
+@Table(name = "RELEASEMESSAGE")
 public class ReleaseMessage {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(generator = "snowflakeIdGeneratorConfig")
+  @GenericGenerator(
+          name = "snowflakeIdGeneratorConfig",
+          strategy = "com.ctrip.framework.apollo.common.service.SnowflakeIdGeneratorConfig"
+  )
   @Column(name = "Id")
   private long id;
 

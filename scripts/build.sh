@@ -1,5 +1,17 @@
 #!/bin/sh
 
+
+# select mysql or oracle
+driver_class_name=com.mysql.jdbc.Driver
+hibernate_dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+validation_query=select 1
+
+#  driver_class_name=oracle.jdbc.OracleDriver
+#  hibernate_dialect=org.hibernate.dialect.Oracle10gDialect
+#  validation_query="select 1 from dual"
+
+DATASOURCE_OPTS="-Dspring.datasource.driver-class-name=$driver_class_name -Dspring.jpa.properties.hibernate.dialect=$hibernate_dialect -Dspring.datasource.validation-query=$validation_query"
+
 # apollo config db info
 apollo_config_db_url=jdbc:mysql://fill-in-the-correct-server:3306/ApolloConfigDB?characterEncoding=utf8
 apollo_config_db_username=FillInCorrectUser
@@ -27,12 +39,12 @@ cd ..
 # package config-service and admin-service
 echo "==== starting to build config-service and admin-service ===="
 
-mvn clean package -DskipTests -pl apollo-configservice,apollo-adminservice -am -Dapollo_profile=github -Dspring_datasource_url=$apollo_config_db_url -Dspring_datasource_username=$apollo_config_db_username -Dspring_datasource_password=$apollo_config_db_password
+mvn clean package -DskipTests -pl apollo-configservice,apollo-adminservice -am -Dapollo_profile=github -Dspring_datasource_url=$apollo_config_db_url -Dspring_datasource_username=$apollo_config_db_username -Dspring_datasource_password=$apollo_config_db_password $DATASOURCE_OPTS
 
 echo "==== building config-service and admin-service finished ===="
 
 echo "==== starting to build portal ===="
 
-mvn clean package -DskipTests -pl apollo-portal -am -Dapollo_profile=github,auth -Dspring_datasource_url=$apollo_portal_db_url -Dspring_datasource_username=$apollo_portal_db_username -Dspring_datasource_password=$apollo_portal_db_password $META_SERVERS_OPTS
+mvn clean package -DskipTests -pl apollo-portal -am -Dapollo_profile=github,auth -Dspring_datasource_url=$apollo_portal_db_url -Dspring_datasource_username=$apollo_portal_db_username -Dspring_datasource_password=$apollo_portal_db_password $META_SERVERS_OPTS $DATASOURCE_OPTS
 
 echo "==== building portal finished ===="

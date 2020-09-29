@@ -1,12 +1,13 @@
 package com.ctrip.framework.apollo.biz.utils;
 
 import com.ctrip.framework.apollo.biz.entity.Item;
-import com.ctrip.framework.apollo.core.utils.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 
 
@@ -27,7 +28,7 @@ public class ConfigChangeContentBuilder {
   }
 
   public ConfigChangeContentBuilder updateItem(Item oldItem, Item newItem) {
-    if (!oldItem.getValue().equals(newItem.getValue())){
+    if (!StringUtils.defaultIfEmpty(oldItem.getValue(),"").equals(StringUtils.defaultIfEmpty(newItem.getValue(),""))){
       ItemPair itemPair = new ItemPair(cloneItem(oldItem), cloneItem(newItem));
       updateItems.add(itemPair);
     }

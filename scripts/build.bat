@@ -1,14 +1,36 @@
 @echo off
 
+
+rem select mysql or oracle
+set driver_class_name=com.mysql.jdbc.Driver
+set hibernate_dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+set validation_query="select 1"
+
+rem set driver_class_name=oracle.jdbc.OracleDriver
+rem set hibernate_dialect=org.hibernate.dialect.Oracle10gDialect
+rem set validation_query="select 1 from dual"
+
+set DATASOURCE_OPTS=-Dspring.datasource.driver-class-name=%driver_class_name% -Dspring.jpa.properties.hibernate.dialect=%hibernate_dialect% -Dspring.datasource.validation-query=%validation_query%
+
 rem apollo config db info
 set apollo_config_db_url="jdbc:mysql://localhost:3306/ApolloConfigDB?characterEncoding=utf8"
 set apollo_config_db_username="root"
 set apollo_config_db_password=""
 
+rem set apollo_config_db_url=jdbc:oracle:thin:@localhost:1521:ORCL
+rem set apollo_config_db_username=""
+rem set apollo_config_db_password=""
+
+
+
 rem apollo portal db info
 set apollo_portal_db_url="jdbc:mysql://localhost:3306/ApolloPortalDB?characterEncoding=utf8"
 set apollo_portal_db_username="root"
 set apollo_portal_db_password=""
+
+rem set apollo_portal_db_url=jdbc:oracle:thin:@localhost:1521:ORCL
+rem set apollo_portal_db_username=""
+rem set apollo_portal_db_password=""
 
 rem meta server url, different environments should have different meta server addresses
 set dev_meta="http://localhost:8080"
@@ -27,13 +49,13 @@ cd ..
 rem package config-service and admin-service
 echo "==== starting to build config-service and admin-service ===="
 
-call mvn clean package -DskipTests -pl apollo-configservice,apollo-adminservice -am -Dapollo_profile=github -Dspring_datasource_url=%apollo_config_db_url% -Dspring_datasource_username=%apollo_config_db_username% -Dspring_datasource_password=%apollo_config_db_password%
+call mvn clean package -DskipTests -pl apollo-configservice,apollo-adminservice -am -Dapollo_profile=github -Dspring_datasource_url=%apollo_config_db_url% -Dspring_datasource_username=%apollo_config_db_username% -Dspring_datasource_password=%apollo_config_db_password% %DATASOURCE_OPTS%
 
 echo "==== building config-service and admin-service finished ===="
 
 echo "==== starting to build portal ===="
 
-call mvn clean package -DskipTests -pl apollo-portal -am -Dapollo_profile=github,auth -Dspring_datasource_url=%apollo_portal_db_url% -Dspring_datasource_username=%apollo_portal_db_username% -Dspring_datasource_password=%apollo_portal_db_password% %META_SERVERS_OPTS%
+call mvn clean package -DskipTests -pl apollo-portal -am -Dapollo_profile=github,auth -Dspring_datasource_url=%apollo_portal_db_url% -Dspring_datasource_username=%apollo_portal_db_username% -Dspring_datasource_password=%apollo_portal_db_password% %META_SERVERS_OPTS% %DATASOURCE_OPTS%
 
 echo "==== building portal finished ===="
 

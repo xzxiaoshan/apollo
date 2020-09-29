@@ -15,18 +15,18 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ServerConfig")
-@SQLDelete(sql = "Update ServerConfig set isDeleted = 1 where id = ?")
-@Where(clause = "isDeleted = 0")
+@SQLDelete(sql = "Update ServerConfig set ISDELETED = 1 where ID = ?")
+@Where(clause = "ISDELETED = 0")
 public class ServerConfig extends BaseEntity {
   @NotBlank(message = "ServerConfig.Key cannot be blank")
-  @Column(name = "Key", nullable = false)
+  @Column(name = "KEY_COL", nullable = false)
   private String key;
 
   @NotBlank(message = "ServerConfig.Value cannot be blank")
-  @Column(name = "Value", nullable = false)
+  @Column(name = "VALUE_COL", nullable = false)
   private String value;
 
-  @Column(name = "Comment", nullable = false)
+  @Column(name = "COMMT", nullable = false)
   private String comment;
 
   public String getKey() {

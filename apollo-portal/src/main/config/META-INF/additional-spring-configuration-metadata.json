@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "dev_meta",
+      "type": "java.lang.String",
+      "description": "Description for dev_meta."
+  }
+] }
