@@ -1,29 +1,27 @@
 package com.ctrip.framework.apollo.portal.spi.springsecurity;
 
-import com.google.common.collect.Lists;
-
 import com.ctrip.framework.apollo.core.utils.StringUtils;
 import com.ctrip.framework.apollo.portal.entity.bo.UserInfo;
+import com.ctrip.framework.apollo.portal.entity.po.Authorities;
 import com.ctrip.framework.apollo.portal.entity.po.UserPO;
+import com.ctrip.framework.apollo.portal.repository.AuthoritiesRepository;
 import com.ctrip.framework.apollo.portal.repository.UserRepository;
 import com.ctrip.framework.apollo.portal.spi.UserService;
-
-import java.util.Collections;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author lepdou 2017-03-10
@@ -37,6 +35,8 @@ public class SpringSecurityUserService implements UserService {
   private JdbcUserDetailsManager userDetailsManager;
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private AuthoritiesRepository authoritiesRepository;
 
   @PostConstruct
   public void init() {
@@ -47,19 +47,15 @@ public class SpringSecurityUserService implements UserService {
   @Transactional
   public void createOrUpdate(UserPO user) {
     String username = user.getUsername();
-
-    User userDetails = new User(username, encoder.encode(user.getPassword()), authorities);
-
     if (userDetailsManager.userExists(username)) {
-      userDetailsManager.updateUser(userDetails);
+      userRepository.update(username,encoder.encode(user.getPassword()),user.getEmail());
     } else {
-      userDetailsManager.createUser(userDetails);
+      user.setPassword(encoder.encode(user.getPassword()));
+      user.setEnabled(1);
+      userRepository.save(user);
+      Authorities auth = new Authorities(username,authorities.get(0).getAuthority());
+      authoritiesRepository.save(auth);
     }
-
-    UserPO managedUser = userRepository.findByUsername(username);
-    managedUser.setEmail(user.getEmail());
-
-    userRepository.save(managedUser);
   }
 
   @Override
