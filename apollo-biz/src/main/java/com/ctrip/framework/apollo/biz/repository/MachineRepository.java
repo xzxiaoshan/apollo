@@ -14,16 +14,13 @@ import java.util.Date;
  */
 public interface MachineRepository extends CrudRepository<SysIdMachine, Long> {
 
-    @Modifying
-    SysIdMachine save(SysIdMachine sysIdMachine);
-
     @Transactional
     @Modifying
-    @Query("update SysIdMachine set heartLastTime=?2 where machineIp = ?1")
-    void update(String machineIp, Date heartLastTime);
+    @Query("update SysIdMachine set heartLastTime= :heartLastTime where machineIp = :machineIp and appName = :appName")
+    void updateByMachineIpAndAppName(@Param("machineIp") String machineIp, @Param("appName") String appName, @Param("heartLastTime") Date heartLastTime);
 
-    SysIdMachine findByMachineIp(@Param(value = "machineIp") String machineIp);
+    SysIdMachine findByMachineIpAndAppName(@Param("machineIp") String machineIp, @Param("appName") String appName);
 
-    @Query("select MAX(machineId)  from SysIdMachine")
-    Integer findMaxMachineId();
+    @Query("select MAX(machineId)  from SysIdMachine where appName= :appName")
+    Integer findMaxMachineId(@Param("appName") String appName);
 }

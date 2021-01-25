@@ -2,12 +2,14 @@ package com.ctrip.framework.apollo.adminservice;
 
 import com.ctrip.framework.apollo.biz.ApolloBizConfig;
 import com.ctrip.framework.apollo.biz.repository.MachineRepository;
+import com.ctrip.framework.apollo.biz.scheduling.MachineIdHeartTask;
 import com.ctrip.framework.apollo.biz.service.DbMachineIdService;
 import com.ctrip.framework.apollo.biz.service.MachineIdService;
 import com.ctrip.framework.apollo.common.ApolloCommonConfig;
 import com.ctrip.framework.apollo.common.service.GenerateIdService;
 import com.ctrip.framework.apollo.common.service.impl.SnowflakeGenerateIdServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -35,12 +37,23 @@ public class AdminServiceApplication {
     @Autowired
     MachineRepository machineRepository;
 
+    @Value("${spring.application.name}")
+    private String appName;
+    @Value("${server.port}")
+    private int appPort;
+
     @Bean
     public GenerateIdService generateIdService() {
-        MachineIdService machineIdService = new DbMachineIdService(machineRepository);
+        MachineIdService machineIdService = new DbMachineIdService(machineRepository, appName, appPort);
         GenerateIdService generateIdService = new SnowflakeGenerateIdServiceImpl(machineIdService.getMachineId());
         return generateIdService;
     }
 
+    @Bean
+    public MachineIdHeartTask machineIdHeartTask() {
+        DbMachineIdService machineIdService = new DbMachineIdService(machineRepository, appName, appPort);
+        MachineIdHeartTask machineIdHeartTask = new MachineIdHeartTask(machineIdService);
+        return machineIdHeartTask;
+    }
 
 }

@@ -2,6 +2,7 @@ package com.ctrip.framework.apollo.configservice;
 
 import com.ctrip.framework.apollo.biz.ApolloBizConfig;
 import com.ctrip.framework.apollo.biz.repository.MachineRepository;
+import com.ctrip.framework.apollo.biz.scheduling.MachineIdHeartTask;
 import com.ctrip.framework.apollo.biz.service.DbMachineIdService;
 import com.ctrip.framework.apollo.biz.service.MachineIdService;
 import com.ctrip.framework.apollo.common.ApolloCommonConfig;
@@ -9,9 +10,11 @@ import com.ctrip.framework.apollo.common.service.GenerateIdService;
 import com.ctrip.framework.apollo.common.service.impl.SnowflakeGenerateIdServiceImpl;
 import com.ctrip.framework.apollo.metaservice.ApolloMetaServiceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.*;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -42,10 +45,22 @@ public class ConfigServiceApplication {
     @Autowired
     MachineRepository machineRepository;
 
+    @Value("${spring.application.name}")
+    private String appName;
+    @Value("${server.port}")
+    private int appPort;
+
     @Bean
     public GenerateIdService generateIdService() {
-        MachineIdService machineIdService = new DbMachineIdService(machineRepository);
+        MachineIdService machineIdService = new DbMachineIdService(machineRepository, this.appName, this.appPort);
         GenerateIdService generateIdService = new SnowflakeGenerateIdServiceImpl(machineIdService.getMachineId());
         return generateIdService;
+    }
+
+    @Bean
+    public MachineIdHeartTask machineIdHeartTask() {
+        DbMachineIdService machineIdService = new DbMachineIdService(machineRepository, this.appName, this.appPort);
+        MachineIdHeartTask machineIdHeartTask = new MachineIdHeartTask(machineIdService);
+        return machineIdHeartTask;
     }
 }

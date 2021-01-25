@@ -34,6 +34,11 @@ public class SysIdMachine {
      */
     @Column(name = "heart_last_time")
     private Date heartLastTime;
+    /**
+     * 服务名
+     */
+    @Column(name = "app_name")
+    private String appName;
 
     public Date getHeartLastTime() {
         return heartLastTime;
@@ -67,4 +72,11 @@ public class SysIdMachine {
         this.machineIp = machineIp;
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
 }

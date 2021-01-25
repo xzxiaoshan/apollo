@@ -5,9 +5,11 @@ import com.ctrip.framework.apollo.common.service.GenerateIdService;
 import com.ctrip.framework.apollo.common.service.impl.SnowflakeGenerateIdServiceImpl;
 import com.ctrip.framework.apollo.openapi.PortalOpenApiConfig;
 import com.ctrip.framework.apollo.portal.repository.MachineRepository;
+import com.ctrip.framework.apollo.portal.scheduling.MachineIdHeartTask;
 import com.ctrip.framework.apollo.portal.service.DbMachineIdService;
 import com.ctrip.framework.apollo.portal.service.MachineIdService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +36,12 @@ public class PortalApplication {
     @Autowired
     MachineRepository machineRepository;
 
+
+    @Value("${spring.application.name}")
+    String appName;
+    @Value("${server.port}")
+    private int appPort;
+
     /**
      * 全局ID服务bean
      *
@@ -41,8 +49,15 @@ public class PortalApplication {
      */
     @Bean
     public GenerateIdService generateIdService() {
-        MachineIdService machineIdService = new DbMachineIdService(machineRepository);
+        MachineIdService machineIdService = new DbMachineIdService(machineRepository, appName, appPort);
         GenerateIdService generateIdService = new SnowflakeGenerateIdServiceImpl(machineIdService.getMachineId());
         return generateIdService;
+    }
+
+    @Bean
+    public MachineIdHeartTask machineIdHeartTask() {
+        DbMachineIdService machineIdService = new DbMachineIdService(machineRepository, appName, appPort);
+        MachineIdHeartTask machineIdHeartTask = new MachineIdHeartTask(machineIdService);
+        return machineIdHeartTask;
     }
 }

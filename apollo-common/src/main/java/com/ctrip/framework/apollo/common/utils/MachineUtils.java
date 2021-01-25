@@ -29,4 +29,8 @@ public class MachineUtils {
         return machineIp;
     }
 
+
+    public static String getMachineIpPort(int appPort) {
+        return getIP().concat(":").concat(String.valueOf(appPort));
+    }
 }

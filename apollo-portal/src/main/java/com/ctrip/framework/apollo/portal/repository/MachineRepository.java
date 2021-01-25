@@ -19,11 +19,12 @@ public interface MachineRepository extends CrudRepository<SysIdMachine, Long> {
 
     @Transactional
     @Modifying
-    @Query("update SysIdMachine set heartLastTime=?2 where machineIp = ?1")
-    void update(String machineIp, Date heartLastTime);
+    @Query("update SysIdMachine set heartLastTime=?3 where machineIp=?1 and appName=?2")
+    void update(String machineIp, String appName, Date heartLastTime);
 
-    SysIdMachine findByMachineIp(@Param(value = "machineIp") String machineIp);
 
-    @Query("select MAX(machineId)  from SysIdMachine")
-    Integer findMaxMachineId();
+    SysIdMachine findByMachineIpAndAppName(String machineIp, String appName);
+
+    @Query("select MAX(machineId)  from SysIdMachine where appName=?1")
+    Integer findMaxMachineId(String appName);
 }

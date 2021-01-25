@@ -1,6 +1,5 @@
 package com.ctrip.framework.apollo.common.service;
 
-import com.ctrip.framework.apollo.common.service.GenerateIdService;
 import com.ctrip.framework.apollo.common.utils.SpringUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

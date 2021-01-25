@@ -19,28 +19,38 @@ public class DbMachineIdService implements MachineIdService {
 
     private MachineRepository machineRepository;
 
-    public DbMachineIdService(MachineRepository machineRepository) {
+    private String appName;
+    private int appPort;
+
+    public DbMachineIdService() {
+
+    }
+
+    public DbMachineIdService(MachineRepository machineRepository, String appName, int appPort) {
         super();
+        this.appName = appName;
+        this.appPort = appPort;
         this.machineRepository = machineRepository;
     }
 
     @Transactional
     public Long getMachineId() {
-        SysIdMachine sysIdMachine = machineRepository.findByMachineIp(MachineUtils.getIP());
+        SysIdMachine sysIdMachine = machineRepository.findByMachineIpAndAppName(getMachineStr(), appName);
         Date nowDate = new Date();
         int machineId = -1;
         if (sysIdMachine != null) {
-            machineRepository.update(MachineUtils.getIP(), nowDate);
+            machineRepository.update(getMachineStr(), appName, nowDate);
             machineId = sysIdMachine.getMachineId();
         } else {
             sysIdMachine = new SysIdMachine();
-            sysIdMachine.setMachineIp(MachineUtils.getIP());
+            sysIdMachine.setMachineIp(getMachineStr());
             sysIdMachine.setAddTime(nowDate);
             sysIdMachine.setHeartLastTime(nowDate);
+            sysIdMachine.setAppName(appName);
             Random random = new Random();
             for (int i = 0; i < 100; i++) {
                 try {
-                    Integer value = machineRepository.findMaxMachineId();
+                    Integer value = machineRepository.findMaxMachineId(appName);
                     machineId = value == null ? 1 : value + 1;
                     sysIdMachine.setMachineId(machineId);
                     machineRepository.save(sysIdMachine);
@@ -63,9 +73,10 @@ public class DbMachineIdService implements MachineIdService {
 
     @Transactional
     public void heartbeat() {
-        SysIdMachine sysIdMachine = machineRepository.findByMachineIp(MachineUtils.getIP());
-        if (sysIdMachine != null) {
-            machineRepository.update(MachineUtils.getIP(), new Date());
-        }
+        this.getMachineId();
+    }
+
+    private String getMachineStr() {
+        return MachineUtils.getMachineIpPort(appPort);
     }
 }

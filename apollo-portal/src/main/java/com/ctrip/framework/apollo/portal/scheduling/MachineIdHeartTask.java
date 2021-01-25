@@ -1,6 +1,6 @@
-package com.ctrip.framework.apollo.biz.scheduling;
+package com.ctrip.framework.apollo.portal.scheduling;
 
-import com.ctrip.framework.apollo.biz.service.DbMachineIdService;
+import com.ctrip.framework.apollo.portal.service.DbMachineIdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

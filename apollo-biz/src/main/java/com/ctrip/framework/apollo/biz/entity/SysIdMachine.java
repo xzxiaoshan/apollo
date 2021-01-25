@@ -1,9 +1,6 @@
 package com.ctrip.framework.apollo.biz.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -34,14 +31,11 @@ public class SysIdMachine {
      */
     @Column(name = "heart_last_time")
     private Date heartLastTime;
-
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
+    /**
+     * 服务名
+     */
+    @Column(name = "app_name")
+    private String appName;
 
     public Date getHeartLastTime() {
         return heartLastTime;
@@ -73,6 +67,14 @@ public class SysIdMachine {
 
     public void setMachineIp(String machineIp) {
         this.machineIp = machineIp;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
 }

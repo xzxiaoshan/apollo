@@ -4,6 +4,21 @@ spring:
   profiles:
     active: ${apollo_profile}
 
+  datasource:
+    url: jdbc:mysql://192.168.1.116:3306/apolloconfigt?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root@123
+    driver-class-name: com.mysql.jdbc.Driver
+    validation-query: select 1
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+# -Deureka.instance.ip-address=192.168.1.124
+
+
+
 ctrip:
   appid: 100003171
 
@@ -12,4 +27,5 @@ server:
 
 logging:
   file: /opt/logs/100003171/apollo-configservice.log
+
 
