@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>muses-sso</title>
+    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+    <script src="jquery.min.js"></script>
+</head>
+<body>
+<div></div>
+<script type="text/javascript">
+    /**
+     * onload方法
+     * @return
+     * @author zhangzp
+     * @date 2021/1/29 20:03
+     */
+    window.onload = function myLoad() {
+        // 1 获取参数
+        let server = getQueryVariable("server");
+        let id = getQueryVariable("id");
+        let url = "http://" + server + "?id=" + id;
+        // 2 调用mcp后台接口
+        jump(url);
+    };
+
+    /**
+     * 根据参数键获取参数值
+     * @param variable
+     * @return
+     * @author zhangzp
+     * @date 2021/1/29 20:03
+     */
+    function getQueryVariable(variable) {
+        const query = window.location.search.substring(1);
+        const vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * 跳转xxl-job首页
+     * @return
+     * @author zhangzp
+     * @date 2021/1/29 20:07
+     */
+    function jump(url) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (result) {
+                //设置cookie
+                document.cookie = result.data.cookie + ';path=/';
+                //跳转页面
+                location.replace(result.data.url);
+            },
+            error: function (result) {
+                location.replace("http://apollo.goodcol.com");
+            }
+        });
+    }
+</script>
+
+</body>
+
+</html>
